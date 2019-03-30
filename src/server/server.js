@@ -73,8 +73,9 @@ flightSuretyApp.events.OracleRequest({
             if(  item[1].includes(index)){
               console.log("allowed oracle ", item[1]);
               (async () => {
-                
-                await flightSuretyApp.methods.submitOracleResponse(index, airline, flight, timestamp, statusCode).send({ from: item[0]});
+                console.log("submitOracleResponse ", index, airline, flight, timestamp, statusCode);
+ 
+                await flightSuretyApp.methods.submitOracleResponse(index, airline, flight, timestamp, statusCode).send({ from: item[0] , gas:5555555});
             })();
             }
         
@@ -86,7 +87,7 @@ flightSuretyApp.events.FlightStatusInfo()
       .on('data', log => {
         const {
           event,
-          returnValues: { flight, destination, timestamp, status }
+          returnValues: { flight, dest, timestamp, status }
         } = log
         console.log(`${event}: flight ${flight}, timestamp ${timestamp}, status ${status}`)
       })

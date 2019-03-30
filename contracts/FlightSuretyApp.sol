@@ -34,8 +34,10 @@ contract FlightSuretyApp {
         uint8 statusCode;
         uint256 updatedTimestamp;        
         address airline;
+        address[] registerPassengers;
+
     }
-    mapping(bytes32 => Flight) private flights;
+     mapping(string => Flight) private flights;
     struct Airline {
         bool isRegistered;
         string name;
@@ -46,6 +48,15 @@ contract FlightSuretyApp {
 
     mapping(address => Airline) private airlines;
     uint private  M = 1;
+
+     struct Passenger {
+         string flightName;
+        uint256 amount;
+        uint256 fundAvailable;  
+        
+    }
+   
+    mapping(address => Passenger) private passengers;
 
     /********************************************************************************************/
     /*                                       FUNCTION MODIFIERS                                 */
@@ -79,6 +90,9 @@ contract FlightSuretyApp {
         require(airlines[msg.sender].isFunded, "Airline is not funded");
         _;
     }
+
+
+
     /********************************************************************************************/
     /*                                       CONSTRUCTOR                                        */
     /********************************************************************************************/
@@ -99,7 +113,7 @@ contract FlightSuretyApp {
         flightSuretyData = FlightSuretyData(dataContract);
     }
      function isAirline(address airlineAddress) 
-                              
+                              public
                             view 
                             returns(bool) 
     {
@@ -108,8 +122,8 @@ contract FlightSuretyApp {
 
     }
 
-     function flighStatus(bytes32 flightName) 
-                              
+     function flighStatus(string flightName) 
+                              public
                             view 
                             returns(bool) 
     {
@@ -123,7 +137,7 @@ contract FlightSuretyApp {
 
     function isOperational() 
                             public 
-                              
+                              view
                             returns(bool) 
     {
         return flightSuretyData.isOperational(); 
@@ -132,13 +146,26 @@ contract FlightSuretyApp {
     /********************************************************************************************/
     /*                                     SMART CONTRACT FUNCTIONS                             */
     /********************************************************************************************/
+    function withdrawFund() public{
 
+ 
+   
+ 
+         require(passengers[msg.sender].fundAvailable > 0, "no fund available");
+         
+        uint amount = passengers[msg.sender].fundAvailable;
+        passengers[msg.sender].fundAvailable = 0;
+        passengers[msg.sender].flightName = '';
+        passengers[msg.sender].amount = 0;
+         msg.sender.transfer(amount);
+         
+    }
   
    /**
     * @dev Add an airline to the registration queue
     *
     */   
-    function fundAirline() payable returns(bool success){
+    function fundAirline() payable public returns(bool success){
          require(msg.value >= AIRLINES_REGISTRATION_FEE, "Registration fee is required");
         require(airlines[msg.sender].isFunded == false, "Airline is already funded");
 
@@ -150,7 +177,7 @@ contract FlightSuretyApp {
 
         return true;
     }
-    
+   
     function registerAirline
                             (    
                                 address newAirline,
@@ -211,23 +238,46 @@ contract FlightSuretyApp {
 
      
 
-
+  function buy
+                            (      
+                                    string name                         
+                            )
+                            external
+                             
+                             
+                            payable
+    {
+    require(msg.value <= 1 ether, "insurance amount is incorrect");
+    require(flights[name].isRegistered, "incorrect flight name");
+         
+        passengers[msg.sender] = Passenger({
+            flightName:name ,
+            amount: msg.value ,
+            fundAvailable: 0 
+            
+            });  
+            flights[name].registerPassengers.push(msg.sender);
+   
+            
+    }
     function registerFlight
                                 (
                                      
-                                bytes32 name,
+                                string name,
                                 uint256 timestamp
                                 )
                                 external
                                 isAirlineAuthorized
                                 
     {
-  
+             address[] memory registerPassengersArray =  new address[](1);
+             registerPassengersArray[0] = msg.sender;
         flights[name] = Flight({
             isRegistered: true,
             statusCode: STATUS_CODE_ON_TIME,
             updatedTimestamp:timestamp,
-            airline: msg.sender
+            airline: msg.sender,
+            registerPassengers:   registerPassengersArray 
                  
             }); 
     }
@@ -238,14 +288,24 @@ contract FlightSuretyApp {
     */  
     function processFlightStatus
                                 (
-                                    address airline,
-                                    string memory flight,
-                                    uint256 timestamp,
+                                     
+                                    string  flight,
+                                     
                                     uint8 statusCode
                                 )
                                 internal
-                                pure
+                                 
     {
+             
+            
+        flights[flight].statusCode =  statusCode;
+            if(statusCode == 20){
+            for(uint c=0; c < flights[flight].registerPassengers.length ; c++) {
+                 passengers[flights[flight].registerPassengers[c]].fundAvailable = (passengers[flights[flight].registerPassengers[c]].amount.mul(3)).div(2);
+            }
+            }
+ 
+            
     }
 
 
@@ -267,7 +327,7 @@ contract FlightSuretyApp {
                                                 isOpen: true
                                             });
 
-        emit OracleRequest(index, airline, flight, timestamp);
+        emit OracleRequest(index, airline, flight , timestamp);
     } 
 
 
@@ -381,7 +441,7 @@ contract FlightSuretyApp {
             emit FlightStatusInfo(airline, flight, timestamp, statusCode);
 
             // Handle flight status as appropriate
-            processFlightStatus(airline, flight, timestamp, statusCode);
+            processFlightStatus( flight , statusCode);
         }
     }
 
@@ -455,7 +515,7 @@ contract FlightSuretyData {
     function registerAirline
                             (   
                                 address newAirline
-                            );
+                            ) public;
     function isAirline(address airlineAddress) 
                               external
                             view 

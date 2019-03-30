@@ -175,7 +175,7 @@ contract FlightSuretyData {
     *
     */   
     function buy
-                            (                             
+                            (                              
                             )
                             external
                             requireIsOperational
@@ -185,33 +185,37 @@ contract FlightSuretyData {
 
     }
 
-    /**
-     *  @dev Credits payouts to insurees
-    */
-    function creditInsurees
-                                (
-                                )
-                                external
-                                requireIsOperational
-                                isCallerAuthorized
+    // /**
+    //  *  @dev Credits payouts to insurees
+    // */
+    // function creditInsurees
+    //                             (
+    //                             )
+    //                             view
+    //                             external
+    //                             requireIsOperational
+    //                             isCallerAuthorized
                                  
-    {
-    }
+    // {
+    // }
     
 
-    /**
-     *  @dev Transfers eligible payout funds to insuree
-     *
-    */
-    function pay
-                            (
-                            )
-                            external
-                            requireIsOperational
-                            isCallerAuthorized
+    // /**
+    //  *  @dev Transfers eligible payout funds to insuree
+    //  *
+    // */
+    // function pay
+    //                         (
+    //                         )
+    //                         external
+    //                         requireIsOperational
+    //                         isCallerAuthorized
                              
-    {
-    }
+    // {
+              
+       
+
+    // }
 
    /**
     * @dev Initial funding for the insurance. Unless there are too many delayed flights
@@ -237,6 +241,7 @@ contract FlightSuretyData {
                         )
                         
                         internal
+                        view
                         requireIsOperational
                         isCallerAuthorized
                         returns(bytes32) 

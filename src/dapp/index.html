@@ -5,6 +5,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>FlightSurety</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
@@ -24,22 +28,52 @@
         <div id="display-wrapper" class="top-20">
 
         <div>available Flights:</div>
-        <div>A101</div>
+        <div>A101:</div>
         <div class="row top-20">
-                <label class="form col-sm-4 field">amount (in wei)</label> <input type="text" id="flight-insurance1"> <btn class="btn btn-primary" id="purchasing-flight-insurance-A101">purchasing flight insurance</btn>
-            </div>
-        <div>KM433</div>
+                <label class="form col-sm-4 field">amount (in wei)</label> <input type="number" id="flight-insurance1"  min='0' max='1' step='0.01'> <btn class="btn btn-primary" id="purchasing-flight-insurance-A101">purchasing flight insurance</btn>
+                <div class="row">
+                        <div class="col-sm-6">
+                             
+                            <div class="col-sm-6">
+                                <btn class="btn btn-secondary" id="flight-refund-A101">refund request</btn>
+            
+                            </div>
+                </div>            </div>   </div>
+            <br>
+            <br>
+        <div>KM433:</div>
         <div class="row top-20">
                 <label class="form col-sm-4 field">amount (in wei)</label> <input type="text" id="flight-insurance2"> <btn class="btn btn-primary" id="purchasing-flight-insurance-KM433">purchasing flight insurance</btn>
+                <div class="row">
+                    
+                            <div class="col-sm-6">
+                                <btn class="btn btn-secondary" id="flight-refund-KM433">refund request</btn>
+            
+                            </div>
+                </div>
             </div>
-        <div>SA333</div>
+            <br>
+            <br>
+        <div>SA333:</div>
         <div class="row top-20">
                 <label class="form col-sm-4 field">amount (in wei)</label> <input type="text" id="flight-insurance3"> <btn class="btn btn-primary" id="purchasing-flight-insurance-SA333">purchasing flight insurance</btn>
+                <div class="row">
+                       
+                            <div class="col-sm-6">
+                                <btn class="btn btn-secondary" id="flight-refund-SA333">refund request</btn>
+            
+                            </div>
+                </div>
             </div>
          </div>
         <div class="row top-20">
-            <label class="form">Flight</label> <input type="text" id="flight-number"> <btn class="btn btn-primary" id="submit-oracle">Submit to Oracles</btn>
+            
+            <label class="form">Flight  (available flights :A101 ,KM433,SA333)   </label> <input type="text" id="flight-number"> <btn class="btn btn-primary" id="submit-oracle">Submit to Oracles</btn>
         </div>
+
+        
+
+        
     </main>
 
 </body>
